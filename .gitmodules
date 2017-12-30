@@ -1,0 +1,3 @@
+[submodule "PhoenixAPI"]
+	path = PhoenixAPI
+	url = https://gitee.com/PhoenixMC/PhoenixAPI.git
