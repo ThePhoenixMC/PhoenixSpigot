@@ -30,7 +30,20 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void transfer(PlayerQuitEvent event) {
-        Phoenix.getEventManager().fire(new com.lss233.phoenix.event.player.PlayerQuitEvent() {
+        Phoenix.getEventManager().fire(new com.lss233.phoenix.event.network.ClientConnectionEvent.Disconnect() {
+
+            @Override
+            public Cause getCause() {
+                return Cause.builder()
+                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .build();
+            }
+        });
+    }
+
+    @EventHandler
+    public void transfer (PlayerLoginEvent event) {
+        Phoenix.getEventManager().fire(new com.lss233.phoenix.event.network.ClientConnectionEvent.Login() {
 
             @Override
             public Cause getCause() {
@@ -109,3 +122,4 @@ public class PlayerListener implements Listener {
     }
 
 }
+
