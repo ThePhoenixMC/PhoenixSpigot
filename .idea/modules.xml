@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PhoenixAPI/Phoenix-API.iml" filepath="$PROJECT_DIR$/PhoenixAPI/Phoenix-API.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PhoenixForSpigot/PhoenixForSpigot.iml" filepath="$PROJECT_DIR$/PhoenixForSpigot/PhoenixForSpigot.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/PhoenixSpigot.iml" filepath="$PROJECT_DIR$/.idea/PhoenixSpigot.iml" />
     </modules>
   </component>
