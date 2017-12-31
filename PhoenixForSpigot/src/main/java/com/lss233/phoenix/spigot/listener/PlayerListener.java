@@ -30,7 +30,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void transfer(PlayerQuitEvent event) {
-        Phoenix.getEventManager().fire(new com.lss233.phoenix.event.network.ClientConnectionEvent.Disconnect() {
+        Phoenix.getEventManager().fire(new ClientConnectionEvent.Disconnect() {
 
             @Override
             public Cause getCause() {
@@ -43,7 +43,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void transfer (PlayerLoginEvent event) {
-        Phoenix.getEventManager().fire(new com.lss233.phoenix.event.network.ClientConnectionEvent.Login() {
+        Phoenix.getEventManager().fire(new ClientConnectionEvent.Login() {
 
             @Override
             public Cause getCause() {

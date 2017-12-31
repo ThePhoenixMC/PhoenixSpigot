@@ -7,12 +7,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Phoenix-API" />
+        <module name="PhoenixForSpigot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Phoenix-API" target="1.8" />
+      <module name="PhoenixForSpigot" target="1.8" />
       <module name="PhoenixFramework" target="1.5" />
-      <module name="PhoenixSpigot" target="1.8" />
+      <module name="PhoenixSpigot" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
