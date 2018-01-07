@@ -1,6 +1,9 @@
 package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.channel.MessageListener;
+import com.lss233.phoenix.entity.Entity;
+import com.lss233.phoenix.entity.EntityTypes;
+import com.lss233.phoenix.entity.Vehicle;
 import com.lss233.phoenix.module.Module;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,72 +14,154 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
- * .
+ * .Spigot classes to Phoenix classes utils.
  */
 public class SpigotUtils {
-    /*
-    private static Map<Player, com.lss233.phoenix.Player> playerMap = new HashMap<>();
-    private static Map<World, com.lss233.phoenix.World> worldMap = new HashMap<>();
-    private static Map<CommandSender, com.lss233.phoenix.command.CommandSender> commandSenderMap = new HashMap<>();
-    */
-
-    public static com.lss233.phoenix.World translateWorld(World BWorld) {
-        com.lss233.phoenix.World PWorld;
-        PWorld = new com.lss233.phoenix.World() {
+    /**
+     * Convert a Bukkit World instance to a Phoenix World instance.
+     * @param BWorld The Bukkit World instance.
+     * @return The Phoenix World instance.
+     */
+    public static com.lss233.phoenix.world.World toPhoenix(World BWorld) {
+        com.lss233.phoenix.world.World PWorld;
+        PWorld = new com.lss233.phoenix.world.World() {
             @Override
             public String getName() {
                 return BWorld.getName();
             }
 
             @Override
-            public List<com.lss233.phoenix.Player> getPlayers() {
-                List<com.lss233.phoenix.Player> players = new ArrayList<>();
+            public List<com.lss233.phoenix.entity.living.Player> getPlayers() {
+                List<com.lss233.phoenix.entity.living.Player> players = new ArrayList<>();
                 for (Player player : BWorld.getPlayers())
-                    players.add(translatePlayer(player));
+                    players.add(toPhoenix(player));
 
                 return players;
             }
 
             @Override
-            public UUID getUUID() {
+            public UUID getUniqueId() {
                 return BWorld.getUID();
             }
 
             @Override
             public boolean equals(Object object) {
-                if (object instanceof com.lss233.phoenix.Player) {
-                    com.lss233.phoenix.World that = (com.lss233.phoenix.World) object;
-                    return Objects.equals(this.getUUID(), that.getUUID());
+                if (object instanceof com.lss233.phoenix.entity.living.Player) {
+                    com.lss233.phoenix.world.World that = (com.lss233.phoenix.world.World) object;
+                    return Objects.equals(this.getUniqueId(), that.getUniqueId());
                 }
                 return false;
             }
 
             @Override
             public int hashCode() {
-                return Objects.hash(this.getName(), this.getUUID());
+                return Objects.hash(this.getName(), this.getUniqueId());
             }
         };
         return PWorld;
     }
 
-    public static com.lss233.phoenix.Player translatePlayer(Player BPlayer) {
-        // Needs improve.
-        com.lss233.phoenix.Player PPlayer;
+    /**
+     * Convert a Bukkit player instance to a Phoenix player instance.
+     * @param BPlayer The Bukkit player instance.
+     * @return The Phoenix player instance.
+     */
+    public static com.lss233.phoenix.entity.living.Player toPhoenix(Player BPlayer) {
+        com.lss233.phoenix.entity.living.Player PPlayer;
 
-        /*if (playerMap.containsKey(BPlayer))
-            PPlayer = playerMap.get(BPlayer);
-        else {*/
-            PPlayer = new com.lss233.phoenix.Player() {
+            PPlayer = new com.lss233.phoenix.entity.living.Player() {
 
                 @Override
-                public com.lss233.phoenix.Location getLocation() {
-                    return translateLocation(BPlayer.getLocation());
+                public EntityTypes getType() {
+                    return null;
+                }
+
+                @Override
+                public boolean hasPassenger(Entity entity) {
+                    return false;
+                }
+
+                @Override
+                public List<Entity> getPassengers() {
+                    return null;
+                }
+
+                @Override
+                public boolean addPassenger(Entity entity) {
+                    return false;
+                }
+
+                @Override
+                public void clearPassengers() {
+
+                }
+
+                @Override
+                public void removePassenger(Entity entity) {
+
+                }
+
+                @Override
+                public Optional<Vehicle> getVehicle() {
+                    return Optional.empty();
+                }
+
+                @Override
+                public boolean setVehicle(Entity entity) {
+                    return false;
+                }
+
+                @Override
+                public Entity getBaseVehicle() {
+                    return null;
+                }
+
+                @Override
+                public Vector getVelocity() {
+                    return null;
+                }
+
+                @Override
+                public boolean gravity() {
+                    return false;
+                }
+
+                @Override
+                public boolean teleport(com.lss233.phoenix.world.Location location) {
+                    return false;
+                }
+
+                @Override
+                public boolean teleport(Entity entity) {
+                    return false;
+                }
+
+                @Override
+                public double getHealth() {
+                    return 0;
+                }
+
+                @Override
+                public void setHealth(double health) {
+
+                }
+
+                @Override
+                public double getMaxHealth() {
+                    return 0;
+                }
+
+                @Override
+                public com.lss233.phoenix.world.Location getLocation() {
+                    return toPhoenix(BPlayer.getLocation());
+                }
+
+                @Override
+                public com.lss233.phoenix.world.World getWorld() {
+                    return null;
                 }
 
                 @Override
@@ -106,8 +191,8 @@ public class SpigotUtils {
 
                 @Override
                 public boolean equals(Object object) {
-                    if (object instanceof com.lss233.phoenix.Player) {
-                        com.lss233.phoenix.Player that = (com.lss233.phoenix.Player) object;
+                    if (object instanceof com.lss233.phoenix.entity.living.Player) {
+                        com.lss233.phoenix.entity.living.Player that = (com.lss233.phoenix.entity.living.Player) object;
                         return this.getName().equals(that.getName()) && Objects.equals(this.getUniqueId(), that.getUniqueId());
                     }
                     return false;
@@ -124,17 +209,19 @@ public class SpigotUtils {
     }
 
 
-    public static com.lss233.phoenix.command.CommandSender translateCommandSender(CommandSender BSender) {
+    /**
+     * Convert a Bukkit CommandSender instance to a Phoenix CommandSender instance.
+     * @param BSender The Bukkit CommandSender instance,
+     * @return The Phoenix CommandSender instance.
+     */
+    public static com.lss233.phoenix.command.CommandSender toPhoenix(CommandSender BSender) {
         com.lss233.phoenix.command.CommandSender PSender;
-        /*if (commandSenderMap.containsKey(BSender))
-            PSender = commandSenderMap.get(BSender);
-        else {*/
             if (BSender instanceof BlockCommandSender) {
                 PSender = new com.lss233.phoenix.command.BlockCommandSender() {
 
                     @Override
                     public com.lss233.phoenix.block.Block getBlock() {
-                        return translateBlock(((BlockCommandSender) BSender).getBlock());
+                        return toPhoenix(((BlockCommandSender) BSender).getBlock());
                     }
 
                     @Override
@@ -148,7 +235,7 @@ public class SpigotUtils {
                     }
                 };
             } else if (BSender instanceof Player) {
-                PSender = translatePlayer((Player) BSender);
+                PSender = toPhoenix((Player) BSender);
             } else if (BSender instanceof ConsoleCommandSender) {
 
                 PSender = new com.lss233.phoenix.command.ConsoleCommandSender() {
@@ -167,23 +254,35 @@ public class SpigotUtils {
             } else {
                 throw new UnsupportedOperationException("Operation not supported.");
             }
-            /*commandSenderMap.put(BSender, PSender);
-        }*/
         return PSender;
     }
 
-    public static com.lss233.phoenix.block.Block translateBlock(Block block) {
+    /**
+     * Convert a Bukkit Block instance to a Phoenix Block instance.
+     * @param block The Bukkit Block instance.
+     * @return The Phoenix Block instance.
+     */
+    public static com.lss233.phoenix.block.Block toPhoenix(Block block) {
         throw new UnsupportedOperationException("Operation not supported.");
     }
 
-
-    public static PluginMessageListener translatePluginMessageListener(MessageListener listener) {
-        return (s, player, bytes) -> listener.onPluginMessageReceived(s, translatePlayer(player), bytes);
+    /**
+     * Convert a Bukkit MessageListener instance to a Phoenix PluginMessageListener instance.
+     * @param listener The Bukkit MessageListener instance.
+     * @return The Phoenix PluginMessageListener instance.
+     */
+    public static PluginMessageListener toPhoenix(MessageListener listener) {
+        return (s, player, bytes) -> listener.onPluginMessageReceived(s, toPhoenix(player), bytes);
     }
 
-    public static com.lss233.phoenix.Location translateLocation(Location to) {
-        com.lss233.phoenix.Location PLocation;
-        PLocation = new com.lss233.phoenix.Location(translateWorld(to.getWorld()), to.getX(), to.getY(), to.getZ());
+    /**
+     * Convert a Bukkit Location instance to a Phoenix Location instance.
+     * @param location The Bukkit Location instance.
+     * @return The Phoenix Location instance.
+     */
+    public static com.lss233.phoenix.world.Location toPhoenix(Location location) {
+        com.lss233.phoenix.world.Location PLocation;
+        PLocation = new com.lss233.phoenix.world.Location(toPhoenix(location.getWorld()), location.getX(), location.getY(), location.getZ());
         return PLocation;
     }
 }
