@@ -3,18 +3,22 @@ package com.lss233.phoenix.spigot;
 import com.lss233.phoenix.channel.MessageListener;
 import com.lss233.phoenix.entity.Entity;
 import com.lss233.phoenix.entity.EntityTypes;
-import com.lss233.phoenix.entity.Vehicle;
 import com.lss233.phoenix.module.Module;
+import com.lss233.phoenix.utils.Identifiable;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.util.*;
+
+import static com.lss233.phoenix.spigot.PhoenixUtils.toSpigot;
 
 /**
  * .Spigot classes to Phoenix classes utils.
@@ -70,98 +74,114 @@ public class SpigotUtils {
      * @return The Phoenix player instance.
      */
     public static com.lss233.phoenix.entity.living.Player toPhoenix(Player BPlayer) {
+        Entity _super = toPhoenix((org.bukkit.entity.Entity)BPlayer);
         com.lss233.phoenix.entity.living.Player PPlayer;
 
             PPlayer = new com.lss233.phoenix.entity.living.Player() {
 
                 @Override
                 public EntityTypes getType() {
-                    return null;
+                    return EntityTypes.valueOf(BPlayer.getType().toString());
                 }
 
                 @Override
                 public boolean hasPassenger(Entity entity) {
-                    return false;
+                    return _super.hasPassenger(entity);
                 }
 
                 @Override
                 public List<Entity> getPassengers() {
-                    return null;
+                    return _super.getPassengers();
                 }
 
                 @Override
                 public boolean addPassenger(Entity entity) {
-                    return false;
+                    return _super.addPassenger(entity);
                 }
 
                 @Override
                 public void clearPassengers() {
-
+                   _super.clearPassengers();
                 }
 
                 @Override
                 public void removePassenger(Entity entity) {
-
+                    _super.removePassenger(entity);
                 }
 
                 @Override
-                public Optional<Vehicle> getVehicle() {
-                    return Optional.empty();
+                public Optional<Entity> getVehicle() {
+                    return _super.getVehicle();
                 }
 
                 @Override
                 public boolean setVehicle(Entity entity) {
-                    return false;
+                    return _super.setVehicle(entity);
                 }
 
                 @Override
                 public Entity getBaseVehicle() {
-                    return null;
+                    return _super.getBaseVehicle();
                 }
 
                 @Override
                 public Vector getVelocity() {
-                    return null;
+                    return _super.getVelocity();
                 }
 
                 @Override
                 public boolean gravity() {
-                    return false;
+                    return _super.gravity();
                 }
 
                 @Override
                 public boolean teleport(com.lss233.phoenix.world.Location location) {
-                    return false;
+                    return _super.teleport(location);
                 }
 
                 @Override
                 public boolean teleport(Entity entity) {
-                    return false;
+                    return _super.teleport(entity);
                 }
 
                 @Override
                 public double getHealth() {
-                    return 0;
+                    return BPlayer.getHealth();
                 }
 
                 @Override
                 public void setHealth(double health) {
-
+                    BPlayer.setHealth(health);
                 }
 
                 @Override
                 public double getMaxHealth() {
-                    return 0;
+                    return BPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
                 }
 
                 @Override
                 public com.lss233.phoenix.world.Location getLocation() {
-                    return toPhoenix(BPlayer.getLocation());
+                    return _super.getLocation();
                 }
 
                 @Override
                 public com.lss233.phoenix.world.World getWorld() {
-                    return null;
+                    return _super.getWorld();
+                }
+
+                @Override
+                public UUID getUniqueId() {
+                    return _super.getUniqueId();
+                }
+
+                @Override
+                public int hashCode() {
+                    return _super.hashCode();
+                }
+
+                @Override
+                public boolean equals(Object object) {
+                    return _super.equals(object);
                 }
 
                 @Override
@@ -175,11 +195,6 @@ public class SpigotUtils {
                 }
 
                 @Override
-                public UUID getUniqueId() {
-                    return BPlayer.getUniqueId();
-                }
-
-                @Override
                 public void sendMessage(String message) {
                     BPlayer.sendMessage(message);
                 }
@@ -189,25 +204,123 @@ public class SpigotUtils {
                     BPlayer.sendMessage(message);
                 }
 
-                @Override
-                public boolean equals(Object object) {
-                    if (object instanceof com.lss233.phoenix.entity.living.Player) {
-                        com.lss233.phoenix.entity.living.Player that = (com.lss233.phoenix.entity.living.Player) object;
-                        return this.getName().equals(that.getName()) && Objects.equals(this.getUniqueId(), that.getUniqueId());
-                    }
-                    return false;
-                }
-
-                @Override
-                public int hashCode() {
-                    return Objects.hash(this.getName(), this.getUniqueId());
-                }
             };
-        /*    playerMap.put(BPlayer, PPlayer);
-        }*/
         return PPlayer;
     }
 
+    public static Vector toPhoenix(org.bukkit.util.Vector velocity) {
+        throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    /**
+     * Convert a Bukkit Entity instance to a Phoenix Entity instance.
+     * @param BEntity The Bukkit Entity instance.
+     * @return The Phoenix Entity instance.
+     */
+    public static Entity toPhoenix(org.bukkit.entity.Entity BEntity){
+        return new Entity() {
+            @Override
+            public EntityTypes getType() {
+                return EntityTypes.valueOf(BEntity.getType().toString());
+            }
+
+            @Override
+            public boolean hasPassenger(Entity entity) {
+                return BEntity.getPassengers().contains(toSpigot(entity));
+            }
+
+            @Override
+            public List<Entity> getPassengers() {
+                List<Entity> list = new ArrayList<>();
+                for (org.bukkit.entity.Entity entity : BEntity.getPassengers()) {
+                    list.add(toPhoenix(entity));
+                }
+                return list;
+            }
+
+            @Override
+            public boolean addPassenger(Entity entity) {
+                return BEntity.addPassenger(toSpigot(entity));
+            }
+
+            @Override
+            public void clearPassengers() {
+                BEntity.getPassengers().forEach(BEntity::removePassenger);
+            }
+
+            @Override
+            public void removePassenger(Entity entity) {
+                BEntity.removePassenger(toSpigot(entity));
+            }
+
+            @Override
+            public Optional<Entity> getVehicle() {
+                return Optional.of(toPhoenix(BEntity.getVehicle()));
+            }
+
+            @Override
+            public boolean setVehicle(Entity entity) {
+                return entity.addPassenger(toPhoenix(BEntity));
+            }
+
+            @Override
+            public Entity getBaseVehicle() {
+                if(this.getVehicle().isPresent())
+                    return this.getVehicle().get().getBaseVehicle();
+                else
+                    return this;
+            }
+
+            @Override
+            public Vector getVelocity() {
+                return toPhoenix(BEntity.getVelocity());
+            }
+
+            @Override
+            public boolean gravity() {
+                return BEntity.hasGravity();
+            }
+
+            @Override
+            public boolean teleport(com.lss233.phoenix.world.Location location) {
+                return BEntity.teleport(toSpigot(location));
+            }
+
+            @Override
+            public boolean teleport(Entity entity) {
+                return BEntity.teleport(toSpigot(entity));
+            }
+
+            @Override
+            public UUID getUniqueId() {
+                return BEntity.getUniqueId();
+            }
+
+            @Override
+            public com.lss233.phoenix.world.Location getLocation() {
+                return toPhoenix(BEntity.getLocation());
+            }
+
+            @Override
+            public com.lss233.phoenix.world.World getWorld() {
+                return toPhoenix(BEntity.getWorld());
+            }
+
+            @Override
+            public int hashCode(){
+                return Objects.hashCode(this.getUniqueId());
+            }
+
+            @Override
+            public boolean equals(Object object) {
+                if (object instanceof Identifiable) {
+                    Identifiable that = (Identifiable)object;
+                    return Objects.equals(this.getUniqueId(), that.getUniqueId());
+                }
+                return false;
+            }
+        };
+    }
 
     /**
      * Convert a Bukkit CommandSender instance to a Phoenix CommandSender instance.
