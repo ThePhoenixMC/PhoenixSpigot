@@ -4,10 +4,13 @@ import com.lss233.phoenix.Phoenix;
 import com.lss233.phoenix.event.cause.Cause;
 import com.lss233.phoenix.event.entity.MoveEntityEvent;
 import com.lss233.phoenix.event.network.ClientConnectionEvent;
-import com.lss233.phoenix.spigot.SpigotUtils;
+import com.lss233.phoenix.world.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+
+import static com.lss233.phoenix.spigot.SpigotUtils.toPhoenix;
+import static com.lss233.phoenix.spigot.PhoenixUtils.toSpigot;
 
 /**
  *
@@ -17,7 +20,7 @@ public class PlayerListener implements Listener {
     public void PlayerJoinEvent(PlayerJoinEvent event) {
 
         Cause cause = Cause.builder()
-                .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                .add("player", toPhoenix(event.getPlayer()))
                 .build();
         Phoenix.getEventManager().fire(new ClientConnectionEvent.Join() {
 
@@ -35,7 +38,7 @@ public class PlayerListener implements Listener {
             @Override
             public Cause getCause() {
                 return Cause.builder()
-                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .add("player", toPhoenix(event.getPlayer()))
                         .build();
             }
         });
@@ -48,7 +51,7 @@ public class PlayerListener implements Listener {
             @Override
             public Cause getCause() {
                 return Cause.builder()
-                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .add("player", toPhoenix(event.getPlayer()))
                         .build();
             }
         });
@@ -57,11 +60,16 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void transfer(PlayerMoveEvent event) {
         Cause cause = Cause.builder()
-                .add("entity", SpigotUtils.translatePlayer(event.getPlayer()))
-                .add("to", SpigotUtils.translateLocation(event.getTo()))
-                .add("from", SpigotUtils.translateLocation(event.getFrom()))
+                .add("entity", toPhoenix(event.getPlayer()))
+                .add("to", toPhoenix(event.getTo()))
+                .add("from", toPhoenix(event.getFrom()))
                 .build();
         Phoenix.getEventManager().fire(new MoveEntityEvent() {
+            @Override
+            public void setTo(Location location) {
+                event.setTo(toSpigot(location));
+            }
+
             @Override
             public boolean isCancelled() {
                 return event.isCancelled();
@@ -85,7 +93,7 @@ public class PlayerListener implements Listener {
             @Override
             public Cause getCause() {
                 return Cause.builder()
-                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .add("player", toPhoenix(event.getPlayer()))
                         .build();
             }
         });
@@ -97,7 +105,7 @@ public class PlayerListener implements Listener {
             @Override
             public Cause getCause() {
                 return Cause.builder()
-                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .add("player", toPhoenix(event.getPlayer()))
                         .build();
             }
         });
@@ -115,7 +123,7 @@ public class PlayerListener implements Listener {
             @Override
             public Cause getCause() {
                 return Cause.builder()
-                        .add("player", SpigotUtils.translatePlayer(event.getPlayer()))
+                        .add("player", toPhoenix(event.getPlayer()))
                         .build();
             }
         });
