@@ -1,8 +1,8 @@
 package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.Phoenix;
-import com.lss233.phoenix.Player;
-import com.lss233.phoenix.World;
+import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.world.World;
 import com.lss233.phoenix.channel.MessageListener;
 import com.lss233.phoenix.command.Command;
 import com.lss233.phoenix.command.PhoenixCommand;
@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.lss233.phoenix.spigot.SpigotUtils.toPhoenix;
 
 /**
  * .
@@ -91,13 +93,13 @@ public class SpigotMain extends JavaPlugin {
 
         public List<World> getWorlds() {
             List<World> worlds = new ArrayList<>();
-            Bukkit.getWorlds().forEach((world)-> worlds.add(SpigotUtils.translateWorld(world)));
+            Bukkit.getWorlds().forEach((world)-> worlds.add(toPhoenix(world)));
             return worlds;
         }
 
         public List<Player> getOnlinePlayers() {
             List<Player> players = new ArrayList<>();
-            Bukkit.getOnlinePlayers().forEach((player)-> players.add(SpigotUtils.translatePlayer(player)));
+            Bukkit.getOnlinePlayers().forEach((player)-> players.add(toPhoenix(player)));
             return players;
         }
 
@@ -135,7 +137,7 @@ public class SpigotMain extends JavaPlugin {
                 public void loadModules() {
                     File moduleDir = new File(getDataFolder(), "modules");
                     if (!moduleDir.exists()) {
-                        moduleDir.mkdir();
+                        moduleDir.mkdirs();
                         return;
                     }
 
@@ -159,7 +161,7 @@ public class SpigotMain extends JavaPlugin {
                     BukkitCommand proxy = new BukkitCommand(b_label) {
                         @Override
                         public boolean execute(CommandSender commandSender, String label, String[] args) {
-                            return Phoenix.getCommandManager().handleCommand(SpigotUtils.translateCommandSender(commandSender), label, args);
+                            return Phoenix.getCommandManager().handleCommand(toPhoenix(commandSender), label, args);
                         }
                     };
                     proxy.setAliases(Arrays.asList(aliases));
@@ -187,7 +189,7 @@ public class SpigotMain extends JavaPlugin {
 
                         @Override
                         public void registerIncomingPluginChannel(Module module, String channelName, MessageListener listener) {
-                            getServer().getMessenger().registerIncomingPluginChannel(instance, channelName, SpigotUtils.translatePluginMessageListener(listener));
+                            getServer().getMessenger().registerIncomingPluginChannel(instance, channelName, toPhoenix(listener));
                         }
                     };
                 }
