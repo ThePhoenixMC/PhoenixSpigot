@@ -2,6 +2,8 @@ package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.Phoenix;
 import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.spigot.utils.Transform;
+import com.lss233.phoenix.spigot.utils.TransformUtil;
 import com.lss233.phoenix.world.World;
 import com.lss233.phoenix.channel.MessageListener;
 import com.lss233.phoenix.command.Command;
@@ -21,18 +23,19 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.lss233.phoenix.spigot.SpigotUtils.toPhoenix;
+import java.util.Objects;
 
 /**
  * .
  */
 public class SpigotMain extends JavaPlugin {
     private static SpigotMain instance;
+    private static Transform transformer = new TransformUtil();
 
-    static SpigotMain getInstance() {
+    public static SpigotMain getInstance() {
         return instance;
     }
+    public static Transform getTransformer() { return  transformer; }
 
     @Override
     public void onEnable(){
@@ -44,7 +47,9 @@ public class SpigotMain extends JavaPlugin {
 
     private void initSpigotSide() {
         if (!getDataFolder().exists()) {
-            getDataFolder().mkdir();
+            if(!getDataFolder().mkdirs()){
+                Phoenix.getLogger("Phoenix").warn("Failed to create data folder, Phoenix Framework wont working.");
+            }
         }
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
@@ -93,13 +98,13 @@ public class SpigotMain extends JavaPlugin {
 
         public List<World> getWorlds() {
             List<World> worlds = new ArrayList<>();
-            Bukkit.getWorlds().forEach((world)-> worlds.add(toPhoenix(world)));
+            Bukkit.getWorlds().forEach((world)-> worlds.add(getTransformer().toPhoenix(world)));
             return worlds;
         }
 
         public List<Player> getOnlinePlayers() {
             List<Player> players = new ArrayList<>();
-            Bukkit.getOnlinePlayers().forEach((player)-> players.add(toPhoenix(player)));
+            Bukkit.getOnlinePlayers().forEach((player)-> players.add(getTransformer().toPhoenix(player)));
             return players;
         }
 
@@ -137,11 +142,13 @@ public class SpigotMain extends JavaPlugin {
                 public void loadModules() {
                     File moduleDir = new File(getDataFolder(), "modules");
                     if (!moduleDir.exists()) {
-                        moduleDir.mkdirs();
+                        if(!moduleDir.mkdirs()){
+                            Phoenix.getLogger("Phoenix").warn("Failed to create module folder, Phoenix Framework wont working.");
+                        }
                         return;
                     }
 
-                    for (File file : moduleDir.listFiles()) {
+                    for (File file : Objects.requireNonNull(moduleDir.listFiles())) {
                         if (!file.getName().endsWith(".jar"))
                             continue;
                         try {
@@ -161,7 +168,7 @@ public class SpigotMain extends JavaPlugin {
                     BukkitCommand proxy = new BukkitCommand(b_label) {
                         @Override
                         public boolean execute(CommandSender commandSender, String label, String[] args) {
-                            return Phoenix.getCommandManager().handleCommand(toPhoenix(commandSender), label, args);
+                            return Phoenix.getCommandManager().handleCommand(getTransformer().toPhoenix(commandSender), label, args);
                         }
                     };
                     proxy.setAliases(Arrays.asList(aliases));
@@ -189,7 +196,7 @@ public class SpigotMain extends JavaPlugin {
 
                         @Override
                         public void registerIncomingPluginChannel(Module module, String channelName, MessageListener listener) {
-                            getServer().getMessenger().registerIncomingPluginChannel(instance, channelName, toPhoenix(listener));
+                            getServer().getMessenger().registerIncomingPluginChannel(instance, channelName, getTransformer().toPhoenix(listener));
                         }
                     };
                 }
