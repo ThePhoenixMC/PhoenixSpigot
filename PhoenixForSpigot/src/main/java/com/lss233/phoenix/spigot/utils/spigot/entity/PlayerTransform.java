@@ -137,7 +137,10 @@ public interface PlayerTransform {
             public void sendPluginMessage(Module source, String channel, byte[] message) {
                 player.sendPluginMessage(SpigotMain.getInstance(), channel, message);
             }
-
+            @Override
+            public void kick() {
+                player.kickPlayer("Connection lost");
+            }
 
             public String getName() {
                 return player.getName();
@@ -152,7 +155,6 @@ public interface PlayerTransform {
             public void sendMessage(String[] message) {
                 player.sendMessage(message);
             }
-
         };
     }
     default org.bukkit.entity.Player toSpigot(Player player){
