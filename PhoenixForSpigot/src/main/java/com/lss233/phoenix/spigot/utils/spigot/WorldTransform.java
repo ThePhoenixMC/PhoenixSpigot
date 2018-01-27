@@ -2,12 +2,12 @@ package com.lss233.phoenix.spigot.utils.spigot;
 
 import com.lss233.phoenix.Phoenix;
 import com.lss233.phoenix.entity.living.Player;
-import com.lss233.phoenix.spigot.utils.spigot.entity.PlayerTransform;
 import com.lss233.phoenix.world.*;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.lss233.phoenix.spigot.SpigotMain.getTransformer;
@@ -138,8 +138,8 @@ public interface WorldTransform {
             }
 
             @Override
-            public String getGameRules(String gameRule) {
-                return world.getGameRuleValue(gameRule);
+            public Optional<String> getGameRules(String gameRule) {
+                return Optional.of(world.getGameRuleValue(gameRule));
             }
 
             @Override
