@@ -1,6 +1,7 @@
 package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.Phoenix;
+import com.lss233.phoenix.command.CommandResult;
 import com.lss233.phoenix.entity.living.Player;
 import com.lss233.phoenix.spigot.utils.Transform;
 import com.lss233.phoenix.spigot.utils.TransformUtil;
@@ -168,7 +169,8 @@ public class SpigotMain extends JavaPlugin {
                     BukkitCommand proxy = new BukkitCommand(b_label) {
                         @Override
                         public boolean execute(CommandSender commandSender, String label, String[] args) {
-                            return Phoenix.getCommandManager().handleCommand(getTransformer().toPhoenix(commandSender), label, args);
+                            CommandResult result = Phoenix.getCommandManager().handleCommand(getTransformer().toPhoenix(commandSender), label, args);
+                            return result.getReason().equals(CommandResult.Reason.NONE);
                         }
                     };
                     proxy.setAliases(Arrays.asList(aliases));
