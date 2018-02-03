@@ -70,13 +70,6 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
-    public void transform(PlayerJoinEvent event) {
-        Phoenix.getEventManager().fire((com.lss233.phoenix.event.player.PlayerJoinEvent) () -> Cause.builder()
-                .add("player", getTransformer().toPhoenix(event.getPlayer()))
-                .build());
-    }
-
-    @EventHandler
     public void transform(PlayerExpChangeEvent event) {
         Phoenix.getEventManager().fire((com.lss233.phoenix.event.player.PlayerExpChangeEvent) () -> Cause.builder()
                 .add("player", getTransformer().toPhoenix(event.getPlayer()))
