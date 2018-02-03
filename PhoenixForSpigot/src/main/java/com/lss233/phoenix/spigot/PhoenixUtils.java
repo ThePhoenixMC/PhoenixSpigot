@@ -2,7 +2,6 @@ package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.entity.Entity;
 import com.lss233.phoenix.world.Location;
-import org.bukkit.World;
 
 import static org.bukkit.Bukkit.*;
 
