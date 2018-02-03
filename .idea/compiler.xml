@@ -10,11 +10,13 @@
         <module name="PhoenixForSpigot" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="Phoenix-API" target="1.8" />
       <module name="PhoenixForSpigot" target="1.8" />
-      <module name="PhoenixFramework" target="1.5" />
       <module name="PhoenixSpigot" target="1.5" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-source 8" />
   </component>
 </project>
