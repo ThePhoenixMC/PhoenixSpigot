@@ -1,7 +1,11 @@
 package com.lss233.phoenix.spigot.utils.spigot;
 
 import com.lss233.phoenix.Phoenix;
+import com.lss233.phoenix.block.Block;
+import com.lss233.phoenix.entity.Entity;
+import com.lss233.phoenix.entity.EntityType;
 import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.world.*;
 import org.bukkit.Bukkit;
 
@@ -24,6 +28,26 @@ public interface WorldTransform {
     default World toPhoenix(org.bukkit.World world){
         return new World() {
             @Override
+            public Optional<Entity> createEntity(EntityType entityType, Vector vector) {
+                return null;
+            }
+
+            @Override
+            public List<Entity> getNearbyEntities(Vector location, double distance) {
+                return null;
+            }
+
+            @Override
+            public List<Entity> getEntities() {
+                return null;
+            }
+
+            @Override
+            public Optional<Entity> getEntity(UUID uniqueId) {
+                return null;
+            }
+
+            @Override
             public String getName() {
                 return world.getName();
             }
@@ -44,6 +68,11 @@ public interface WorldTransform {
             @Override
             public WorldProperties getProperties() {
                 return toPhoenixWorldProperties(world);
+            }
+
+            @Override
+            public boolean setBlock(Block block, boolean force) {
+                return false;
             }
         };
     }
