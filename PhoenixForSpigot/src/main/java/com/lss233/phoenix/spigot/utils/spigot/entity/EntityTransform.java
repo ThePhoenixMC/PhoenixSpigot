@@ -1,7 +1,7 @@
 package com.lss233.phoenix.spigot.utils.spigot.entity;
 
 import com.lss233.phoenix.entity.Entity;
-import com.lss233.phoenix.entity.EntityTypes;
+import com.lss233.phoenix.entity.EntityType;
 import com.lss233.phoenix.utils.Identifiable;
 import org.bukkit.Bukkit;
 
@@ -21,8 +21,8 @@ public interface EntityTransform {
     default Entity toPhoenix(org.bukkit.entity.Entity entity){
         return new Entity() {
             @Override
-            public EntityTypes getType() {
-                return EntityTypes.valueOf(entity.getType().toString());
+            public EntityType getType() {
+                return EntityType.valueOf(entity.getType().toString());
             }
 
             @Override

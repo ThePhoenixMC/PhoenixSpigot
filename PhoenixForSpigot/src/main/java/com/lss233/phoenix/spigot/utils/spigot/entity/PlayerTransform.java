@@ -1,7 +1,7 @@
 package com.lss233.phoenix.spigot.utils.spigot.entity;
 
 import com.lss233.phoenix.entity.Entity;
-import com.lss233.phoenix.entity.EntityTypes;
+import com.lss233.phoenix.entity.EntityType;
 import com.lss233.phoenix.entity.living.Player;
 import com.lss233.phoenix.module.Module;
 import com.lss233.phoenix.spigot.SpigotMain;
@@ -28,8 +28,8 @@ public interface PlayerTransform {
         return new Player() {
 
             @Override
-            public EntityTypes getType() {
-                return EntityTypes.valueOf(player.getType().toString());
+            public EntityType getType() {
+                return EntityType.valueOf(player.getType().toString());
             }
 
             @Override
