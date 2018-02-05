@@ -1,7 +1,11 @@
 package com.lss233.phoenix.spigot.utils.spigot;
 
 import com.lss233.phoenix.Phoenix;
+import com.lss233.phoenix.block.Block;
+import com.lss233.phoenix.entity.Entity;
+import com.lss233.phoenix.entity.EntityType;
 import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.world.*;
 import org.bukkit.Bukkit;
 
@@ -23,6 +27,64 @@ public interface WorldTransform {
      */
     default World toPhoenix(org.bukkit.World world){
         return new World() {
+            /**
+             * Create an entity instance at the given position.
+             *
+             * @param entityType The type
+             * @param vector     The position
+             * @return An entity
+             */
+            @Override
+            public Optional<Entity> createEntity(EntityType entityType, Vector vector) {
+                org.bukkit.entity.Entity entity = world.spawnEntity(getTransformer()
+                            .toSpigot(vector.toLocation(getTransformer().toPhoenix(world))),
+                        org.bukkit.entity.EntityType.valueOf(entityType.toString()));
+                if(entity == null)
+                    return Optional.empty();
+                else
+                    return Optional.of(getTransformer().toPhoenix(entity));
+            }
+
+            /**
+             * Return a list of entities contained within {@code distance} blocks
+             * of the specified location. This uses a sphere to test distances.
+             *
+             * @param location The location at the center of the search radius
+             * @param distance The search radius
+             * @return A list of nearby entities
+             */
+            @Override
+            public List<Entity> getNearbyEntities(Vector location, double distance) {
+                List<Entity> entities = new ArrayList<>();
+                world.getNearbyEntities(getTransformer().toSpigot(location.toLocation(getTransformer().toPhoenix(world))), distance, distance, distance)
+                        .forEach((entity)-> entities.add(getTransformer().toPhoenix(entity)));
+                return entities;
+            }
+
+            /**
+             * Return a list of entities contained within this world.
+             *
+             * @return A list of entities
+             */
+            @Override
+            public List<Entity> getEntities() {
+                List<Entity> entities = new ArrayList<>();
+                world.getEntities().forEach((entity)-> entities.add(getTransformer().toPhoenix(entity)));
+                return entities;
+            }
+
+            /**
+             * Gets the entity whose {@link UUID} matches the provided id, possibly
+             * returning no entity if the entity is not loaded or non-existent.
+             *
+             * @param uniqueId The unique id
+             * @return An entity
+             */
+            @Override
+            public Optional<Entity> getEntity(UUID uniqueId) {
+                return Optional.empty();
+            }
+
             @Override
             public String getName() {
                 return world.getName();
@@ -44,6 +106,11 @@ public interface WorldTransform {
             @Override
             public WorldProperties getProperties() {
                 return toPhoenixWorldProperties(world);
+            }
+
+            @Override
+            public boolean setBlock(Block block, boolean force) {
+                throw new UnsupportedOperationException("Not implement yet.");
             }
         };
     }
