@@ -3,6 +3,7 @@ package com.lss233.phoenix.spigot;
 import com.lss233.phoenix.Phoenix;
 import com.lss233.phoenix.command.CommandResult;
 import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.spigot.listener.EntityListener;
 import com.lss233.phoenix.spigot.utils.Transform;
 import com.lss233.phoenix.spigot.utils.TransformUtil;
 import com.lss233.phoenix.world.World;
@@ -53,6 +54,7 @@ public class SpigotMain extends JavaPlugin {
             }
         }
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
+        getServer().getPluginManager().registerEvents(new EntityListener(), this);
     }
 
     private class SpigotServer implements Phoenix.Server{
