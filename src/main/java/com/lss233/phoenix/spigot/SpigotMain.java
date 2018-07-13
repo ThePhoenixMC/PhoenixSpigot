@@ -1,22 +1,32 @@
 package com.lss233.phoenix.spigot;
 
 import com.lss233.phoenix.Phoenix;
-import com.lss233.phoenix.command.CommandResult;
-import com.lss233.phoenix.entity.living.Player;
-import com.lss233.phoenix.spigot.listener.EntityListener;
-import com.lss233.phoenix.spigot.utils.Transform;
-import com.lss233.phoenix.spigot.utils.TransformUtil;
-import com.lss233.phoenix.world.World;
 import com.lss233.phoenix.channel.MessageListener;
 import com.lss233.phoenix.command.Command;
+import com.lss233.phoenix.command.CommandResult;
 import com.lss233.phoenix.command.PhoenixCommand;
+import com.lss233.phoenix.data.key.Keys;
+import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.item.enchantment.Enchantment;
+import com.lss233.phoenix.item.inventory.Inventory;
+import com.lss233.phoenix.item.inventory.InventoryType;
+import com.lss233.phoenix.item.inventory.ItemStack;
+import com.lss233.phoenix.item.inventory.property.InventoryDimension;
+import com.lss233.phoenix.item.inventory.property.InventoryTitle;
 import com.lss233.phoenix.logging.Logger;
 import com.lss233.phoenix.module.Module;
+import com.lss233.phoenix.spigot.listener.EntityListener;
 import com.lss233.phoenix.spigot.listener.PlayerListener;
+import com.lss233.phoenix.spigot.utils.Transform;
+import com.lss233.phoenix.spigot.utils.TransformUtil;
+import com.lss233.phoenix.spigot.utils.spigot.enchantment.EnchantmentWrapper;
+import com.lss233.phoenix.text.Text;
+import com.lss233.phoenix.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -26,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * .
@@ -203,6 +214,41 @@ public class SpigotMain extends JavaPlugin {
                             getServer().getMessenger().registerIncomingPluginChannel(instance, channelName, getTransformer().toPhoenix(listener));
                         }
                     };
+                }
+
+                @Override
+                public Inventory registerInventory(Inventory.Builder builder) {
+                    org.bukkit.inventory.Inventory inventory;
+
+                    Integer size = ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getColumns() * ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getRows();
+                    String title = ((InventoryTitle) builder.getProperties().get(InventoryTitle.PROPERTY_NAME)).getText().toString();
+
+                    if (builder.getType().equals(InventoryType.CHEST) || builder.getType().equals(InventoryType.DOUBLE_CHEST))
+                        inventory = Bukkit.createInventory(null, size, title);
+                    else
+                        inventory = Bukkit.createInventory(null, getTransformer().toSpigot(builder.getType()), title);
+
+                    return getTransformer().toPhoenix(inventory);
+                }
+
+                @Override
+                public ItemStack registerItemStack(ItemStack.Builder builder) {
+                    org.bukkit.inventory.ItemStack itemStack = new org.bukkit.inventory.ItemStack(getTransformer().toSpigot(builder.getItemType()), builder.getQuantity());
+                    ItemMeta itemMeta = itemStack.getItemMeta();
+                    builder.get(Keys.ITEM_LORE).ifPresent(lore -> itemMeta.setLore(lore.stream().map(Text::toString).collect(Collectors.toList())));
+
+                    builder.get(Keys.ITEM_DURABILITY).ifPresent(v -> itemStack.setDurability(v.shortValue()));
+                    builder.get(Keys.ITEM_ENCHANTMENTS).ifPresent(v -> v.forEach(enchantment -> {
+                        EnchantmentWrapper enchantmentWrapper = getTransformer().toSpigot(enchantment);
+                        itemStack.addEnchantment(enchantmentWrapper.getEnchantment(), enchantmentWrapper.getLevel());
+                    }));
+                    itemStack.setItemMeta(itemMeta);
+                    return getTransformer().toPhoenix(itemStack);
+                }
+
+                @Override
+                public Enchantment registerEnchantment(Enchantment.Builder builder) {
+                    return getTransformer().toPhoenix(EnchantmentWrapper.of(org.bukkit.enchantments.Enchantment.getByName(builder.getType().getName()), builder.getLevel()));
                 }
 
             };
