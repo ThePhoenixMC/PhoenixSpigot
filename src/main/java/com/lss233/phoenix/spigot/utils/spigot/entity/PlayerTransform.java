@@ -3,14 +3,22 @@ package com.lss233.phoenix.spigot.utils.spigot.entity;
 import com.lss233.phoenix.entity.Entity;
 import com.lss233.phoenix.entity.EntityType;
 import com.lss233.phoenix.entity.living.Player;
+import com.lss233.phoenix.item.inventory.CarriedInventory;
+import com.lss233.phoenix.item.inventory.Carrier;
+import com.lss233.phoenix.item.inventory.Inventory;
+import com.lss233.phoenix.item.inventory.ItemStack;
+import com.lss233.phoenix.item.inventory.equipment.EquipmentType;
+import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.module.Module;
 import com.lss233.phoenix.spigot.SpigotMain;
+import org.apache.commons.lang.NotImplementedException;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
+
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.Vector;
 
 import static com.lss233.phoenix.spigot.SpigotMain.getTransformer;
 
@@ -26,6 +34,21 @@ public interface PlayerTransform {
     default Player toPhoenix(org.bukkit.entity.Player player){
         Entity _super = getTransformer().toPhoenix((org.bukkit.entity.Entity) player);
         return new Player() {
+
+            @Override
+            public CarriedInventory<? extends Carrier> getInventory() {
+                return null;
+            }
+
+            @Override
+            public boolean equip(EquipmentType equipmentType, @Nullable ItemStack itemStack) {
+                throw new NotImplementedException("当你看到这个异常的时候，开发者可能已经猝死了.");
+            }
+
+            @Override
+            public Optional<ItemStack> getEquipped(EquipmentType equipmentType) {
+                return Optional.empty();
+            }
 
             @Override
             public EntityType getType() {
@@ -140,6 +163,24 @@ public interface PlayerTransform {
             @Override
             public void kick() {
                 player.kickPlayer("Connection lost");
+            }
+
+            @Override
+            public Optional<Inventory> openInventory(Inventory inventory) {
+                player.openInventory(getTransformer().toSpigot(inventory));
+                return Optional.of(inventory);
+            }
+
+            @Override
+            public Optional<Inventory> getOpenInventory() {
+                return Optional.of(getTransformer().toPhoenix(player.getOpenInventory().getTopInventory()));
+            }
+
+            @Override
+            public boolean closeInventory() {
+                org.bukkit.inventory.Inventory top = player.getOpenInventory().getTopInventory();
+                player.closeInventory();
+                return !player.getOpenInventory().getTopInventory().equals(top);
             }
 
             public String getName() {
