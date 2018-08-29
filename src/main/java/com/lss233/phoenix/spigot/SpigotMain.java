@@ -129,19 +129,24 @@ public class SpigotMain extends JavaPlugin {
         public Logger getLogger() {
             return new Logger() {
                 @Override
-                public void info(String msg) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + msg);
+                public void info(Object msg) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.WHITE + String.valueOf(msg));
                 }
 
                 @Override
-                public void warn(String msg) {
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + msg);
+                public void warn(Object msg) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.GOLD + String.valueOf(msg));
                 }
 
                 @Override
-                public void debug(String msg) {
+                public void severe(Object msg) {
+                    Bukkit.getConsoleSender().sendMessage(ChatColor.DARK_RED + String.valueOf(msg));
+                }
+
+                @Override
+                public void debug(Object msg) {
                     if(Phoenix.getDebugMode()){
-                        Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + msg);
+                        Bukkit.getConsoleSender().sendMessage(ChatColor.GRAY + String.valueOf(msg));
                     }
 
                 }

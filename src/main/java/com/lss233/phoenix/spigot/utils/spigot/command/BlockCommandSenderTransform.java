@@ -17,6 +17,11 @@ public interface BlockCommandSenderTransform {
     default BlockCommandSender toPhoenix(org.bukkit.command.BlockCommandSender blockCommandSender){
         return new BlockCommandSender() {
             @Override
+            public boolean hasPermission(String s) {
+                return blockCommandSender.hasPermission(s);
+            }
+
+            @Override
             public Block getBlock() {
                 return getTransformer().toPhoenix(blockCommandSender.getBlock());
             }

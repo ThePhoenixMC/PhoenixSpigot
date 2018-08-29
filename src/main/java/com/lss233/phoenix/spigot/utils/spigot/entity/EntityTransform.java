@@ -2,6 +2,7 @@ package com.lss233.phoenix.spigot.utils.spigot.entity;
 
 import com.lss233.phoenix.entity.Entity;
 import com.lss233.phoenix.entity.EntityType;
+import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.utils.Identifiable;
 import org.bukkit.Bukkit;
 
@@ -114,7 +115,7 @@ public interface EntityTransform {
 
             @Override
             public boolean equals(Object object) {
-                if (object != null && object instanceof Identifiable) {
+                if (object instanceof Identifiable) {
                     Identifiable that = (Identifiable)object;
                     return equals(that);
                 }

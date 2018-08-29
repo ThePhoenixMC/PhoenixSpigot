@@ -36,6 +36,11 @@ public interface PlayerTransform {
         return new Player() {
 
             @Override
+            public boolean hasPermission(String s) {
+                return player.hasPermission(s);
+            }
+
+            @Override
             public CarriedInventory<? extends Carrier> getInventory() {
                 return null;
             }

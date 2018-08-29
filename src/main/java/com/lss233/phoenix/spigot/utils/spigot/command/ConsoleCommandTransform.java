@@ -15,6 +15,11 @@ public interface ConsoleCommandTransform {
         return new com.lss233.phoenix.command.ConsoleCommandSender() {
 
             @Override
+            public boolean hasPermission(String s) {
+                return consoleCommandSender.hasPermission(s);
+            }
+
+            @Override
             public void sendMessage(String message) {
                 consoleCommandSender.sendMessage(message);
             }

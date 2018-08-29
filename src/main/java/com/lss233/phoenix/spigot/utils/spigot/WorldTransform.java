@@ -9,10 +9,8 @@ import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.world.*;
 import org.bukkit.Bukkit;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.lss233.phoenix.spigot.SpigotMain.getTransformer;
 
@@ -111,6 +109,53 @@ public interface WorldTransform {
             @Override
             public boolean setBlock(Block block, boolean force) {
                 throw new UnsupportedOperationException("Not implement yet.");
+            }
+
+            @Override
+            public Location getSpawnLocation() {
+                return getTransformer().toPhoenix(world.getSpawnLocation());
+            }
+
+            @Override
+            public int getSeaLevel() {
+                return world.getSeaLevel();
+            }
+
+            @Override
+            public void save() {
+                world.save();
+            }
+
+            @Override
+            public Chunk getChunk(int x, int z) {
+                return getTransformer().toPhoenix(world.getChunkAt(x, z));
+            }
+
+            @Override
+            public Chunk getChunk(Location location) {
+                return getTransformer().toPhoenix(world.getChunkAt(getTransformer().toSpigot(location)));
+            }
+
+            @Override
+            public boolean loadChunk(int i, int i1, boolean b) {
+                return world.loadChunk(i, i1, b);
+            }
+
+            @Override
+            public boolean unloadChunk(Chunk chunk) {
+                return world.unloadChunk(getTransformer().toSpigot(chunk));
+            }
+
+            @Override
+            public void createExplosion(double v, double v1, double v2, float v3) {
+                world.createExplosion(v, v1, v2, v3);
+            }
+
+            @Override
+            public List<Chunk> getLoadedChunks() {
+                return Arrays.stream(world.getLoadedChunks())
+                        .map(chunk -> getTransformer().toPhoenix(chunk))
+                        .collect(Collectors.toList());
             }
         };
     }
