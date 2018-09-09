@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 
 import static com.lss233.phoenix.spigot.SpigotMain.getTransformer;
-import static com.lss233.phoenix.spigot.PhoenixUtils.toSpigot;
 
 /**
  *
@@ -49,7 +48,7 @@ public class PlayerListener implements Listener {
         Phoenix.getEventManager().fire(new MoveEntityEvent() {
             @Override
             public void setTo(Location location) {
-                event.setTo(toSpigot(location));
+                event.setTo(getTransformer().toSpigot(location));
             }
 
             @Override
