@@ -16,6 +16,7 @@ import com.lss233.phoenix.item.inventory.property.InventoryTitle;
 import com.lss233.phoenix.logging.Logger;
 import com.lss233.phoenix.module.Module;
 import com.lss233.phoenix.spigot.listener.EntityListener;
+import com.lss233.phoenix.spigot.listener.InventoryListener;
 import com.lss233.phoenix.spigot.listener.PlayerListener;
 import com.lss233.phoenix.spigot.utils.Transform;
 import com.lss233.phoenix.spigot.utils.TransformUtil;
@@ -66,6 +67,7 @@ public class SpigotMain extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
         getServer().getPluginManager().registerEvents(new EntityListener(), this);
+        getServer().getPluginManager().registerEvents(new InventoryListener(), this);
     }
 
     private class SpigotServer implements Phoenix.Server{
