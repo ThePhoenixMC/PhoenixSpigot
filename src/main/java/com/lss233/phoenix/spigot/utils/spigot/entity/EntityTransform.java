@@ -6,7 +6,11 @@ import com.lss233.phoenix.math.Vector;
 import com.lss233.phoenix.utils.Identifiable;
 import org.bukkit.Bukkit;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.lss233.phoenix.spigot.SpigotMain.getTransformer;
 
@@ -33,11 +37,10 @@ public interface EntityTransform {
 
             @Override
             public List<Entity> getPassengers() {
-                List<Entity> list = new ArrayList<>();
-                for (org.bukkit.entity.Entity entity : entity.getPassengers()) {
-                    list.add(toPhoenix(entity));
-                }
-                return list;
+                return entity.getPassengers()
+                        .stream()
+                        .map(EntityTransform.this::toPhoenix)
+                        .collect(Collectors.toList());
             }
 
             @Override
@@ -57,6 +60,8 @@ public interface EntityTransform {
 
             @Override
             public Optional<Entity> getVehicle() {
+                if (entity.getVehicle() == null)
+                    return Optional.empty();
                 return Optional.of(toPhoenix(entity.getVehicle()));
             }
 
@@ -70,7 +75,7 @@ public interface EntityTransform {
                 if(this.getVehicle().isPresent())
                     return this.getVehicle().get().getBaseVehicle();
                 else
-                    return this;
+                    return null;
             }
 
             @Override
@@ -101,11 +106,6 @@ public interface EntityTransform {
             @Override
             public com.lss233.phoenix.world.Location getLocation() {
                 return getTransformer().toPhoenix(entity.getLocation());
-            }
-
-            @Override
-            public com.lss233.phoenix.world.World getWorld() {
-                return getTransformer().toPhoenix(entity.getWorld());
             }
 
             @Override

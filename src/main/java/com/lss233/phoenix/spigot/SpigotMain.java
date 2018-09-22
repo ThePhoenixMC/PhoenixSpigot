@@ -33,7 +33,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -113,15 +112,17 @@ public class SpigotMain extends JavaPlugin {
         }
 
         public List<World> getWorlds() {
-            List<World> worlds = new ArrayList<>();
-            Bukkit.getWorlds().forEach((world)-> worlds.add(getTransformer().toPhoenix(world)));
-            return worlds;
+            return Bukkit.getWorlds()
+                    .stream()
+                    .map(world -> getTransformer().toPhoenix(world))
+                    .collect(Collectors.toList());
         }
 
         public List<Player> getOnlinePlayers() {
-            List<Player> players = new ArrayList<>();
-            Bukkit.getOnlinePlayers().forEach((player)-> players.add(getTransformer().toPhoenix(player)));
-            return players;
+            return Bukkit.getOnlinePlayers()
+                    .stream()
+                    .map(world -> getTransformer().toPhoenix(world))
+                    .collect(Collectors.toList());
         }
 
         public File getPhoenixDataDir() {
@@ -164,7 +165,7 @@ public class SpigotMain extends JavaPlugin {
                     File moduleDir = new File(getDataFolder(), "modules");
                     if (!moduleDir.exists()) {
                         if(!moduleDir.mkdirs()){
-                            Phoenix.getLogger("Phoenix").warn("Failed to create module folder, Phoenix Framework wont working.");
+                            Phoenix.getLogger("Phoenix").severe("Failed to create module folder, Phoenix Framework wont working.");
                         }
                         return;
                     }
@@ -227,7 +228,7 @@ public class SpigotMain extends JavaPlugin {
                 public Inventory registerInventory(Inventory.Builder builder) {
                     org.bukkit.inventory.Inventory inventory;
 
-                    Integer size = ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getColumns() * ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getRows();
+                    int size = ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getColumns() * ((InventoryDimension) builder.getProperties().get(InventoryDimension.PROPERTY_NAME)).getRows();
                     String title = ((InventoryTitle) builder.getProperties().get(InventoryTitle.PROPERTY_NAME)).getText().toString();
 
                     if (builder.getType().equals(InventoryType.CHEST) || builder.getType().equals(InventoryType.DOUBLE_CHEST))

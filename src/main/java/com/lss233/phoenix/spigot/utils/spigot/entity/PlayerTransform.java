@@ -141,11 +141,6 @@ public interface PlayerTransform {
             }
 
             @Override
-            public com.lss233.phoenix.world.World getWorld() {
-                return _super.getWorld();
-            }
-
-            @Override
             public UUID getUniqueId() {
                 return _super.getUniqueId();
             }

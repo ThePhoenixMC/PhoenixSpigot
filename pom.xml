@@ -21,11 +21,6 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.lss233.phoenix</include>
-                                </includes>
-                            </artifactSet>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
@@ -77,6 +72,11 @@
             <groupId>com.lss233.phoenix</groupId>
             <artifactId>Phoenix-API</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.6.0</version>
         </dependency>
     </dependencies>
 
